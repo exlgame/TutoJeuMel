@@ -155,10 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dafb887d23fbd4f949a5e42bad3bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 250
-  isJumping: 0
+  moveSpeed: 10
+  jumpForce: 10
   rb: {fileID: 128388383}
-  jumpforce: 300
 --- !u!212 &128388380
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -286,7 +285,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

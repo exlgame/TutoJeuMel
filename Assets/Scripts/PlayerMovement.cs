@@ -3,36 +3,51 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed;
-    public bool isJumping = false;
+    public float jumpForce;
     public Rigidbody2D rb;
     private Vector3 velocity = Vector3.zero;
-    public float jumpforce;
+    private bool isJumping = false;
+    private bool isGrounded = false;
 
-    void Start()
+    void Update()
     {
-        
+        // Détection de l'entrée de saut dans Update pour garantir que chaque pression de touche est détectée
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            isJumping = true;
+        }
     }
 
     void FixedUpdate()
     {
-        float horizontalMovement = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+        // Mouvement horizontal
+        float horizontalMovement = Input.GetAxis("Horizontal") * moveSpeed;
 
-        if(Input.GetButtonDown("Jump"))
+        // Détection du sol (ici, on utilise une version simplifiée, mais vous pouvez utiliser un raycast pour plus de précision)
+        if (Mathf.Abs(rb.velocity.y) < 0.01f)
         {
-            isJumping = true;
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
         }
 
+        // Déplacement du joueur
         MovePlayer(horizontalMovement);
     }
 
     void MovePlayer(float _horizontalMovement)
     {
-        Vector3 targerVelocity = new Vector2(_horizontalMovement, rb.velocity.y);
-        rb.velocity = Vector3.SmoothDamp(rb.velocity, targerVelocity, ref velocity, 0.05f);
+        // Appliquer le mouvement horizontal
+        Vector3 targetVelocity = new Vector2(_horizontalMovement, rb.velocity.y);
+        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, 0.05f);
 
-        if (isJumping == true)
+        // Gestion du saut
+        if (isJumping)
         {
-            rb.AddForce(new Vector2(0f, jumpforce));
+            rb.velocity = new Vector2(rb.velocity.x, 0f);  // Réinitialiser la vélocité verticale
+            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             isJumping = false;
         }
     }
